@@ -4,6 +4,7 @@ from monster import Monster
 from fonts import Fonts
 from itertools import cycle
 from buttons import Button
+from map import Parser
 
 
 class Game:
@@ -16,12 +17,15 @@ class Game:
         self.cycle_alpha = cycle([*range(0, 256, 2)] + [*range(0, 256, 2)][::-1])
         self.player = Player(self)
         self.clock = pygame.time.Clock()
-        self.background = pygame.image.load("assets/background.png").convert()
         self.banner = pygame.transform.scale2x(pygame.image.load("assets/banner.png"))
         self.all_monsters = pygame.sprite.Group()
         self.SpawnMonsterEvent = pygame.USEREVENT + 1
         self.play_button = Button("assets/playbutton.png", (300, 280))
-        self.play_button.image = pygame.transform.scale2x(self.play_button.image)
+        self.title_background = pygame.image.load("assets/background.png").convert()
+        self.play_button.image = pygame.transform.scale2x(self.play_button.image).convert_alpha()
+        self.read_lvl(1)
+        self.lvl_background = self.map.screen.convert()
+        self.background = self.title_background
 
     def event(self):
         self.clock.tick(60)
@@ -40,6 +44,7 @@ class Game:
                 print(event.pos)
                 if self.play_button.rect.collidepoint(event.pos):
                     self.state = "in game"
+                    self.background = self.lvl_background
                     self.reset_timer()
 
     def update(self):
@@ -91,3 +96,8 @@ class Game:
         self.state = "game over"
         self.all_monsters = pygame.sprite.Group()
         self.score = 0
+        self.background = self.title_background
+
+    def read_lvl(self, index):
+        with open(f'maps/lvl{index}.dmap', 'r') as lvl:
+            self.map = Parser(lvl.read())

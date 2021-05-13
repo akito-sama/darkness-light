@@ -19,7 +19,6 @@ class Plasma(pygame.sprite.Sprite):
             self.center[1] - self.rect[1] - weap_h / 2,
             self.center[0] - self.rect[0] - weap_w / 2
         )
-        print(self.radiant)
         degree = self.radiant * 180 / math.pi
         self.image = pygame.transform.rotate(image, -degree).convert_alpha()
         self.cosinus = math.cos(self.radiant) * self.velocity
@@ -31,7 +30,8 @@ class Plasma(pygame.sprite.Sprite):
         self.rect[0] -= self.cosinus
         self.rect[1] -= self.sinus
         if (not 0 - self.image.get_width() < self.rect[1] < height or
-            not 0 - self.image.get_height() < self.rect[0] < width):
+            not 0 - self.image.get_height() < self.rect[0] < width or
+            self.weapon.game.map.check_collision(self.rectangle)):
             self.kill()
         # print(repr(self))
 

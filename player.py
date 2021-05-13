@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.image_right = pygame.transform.flip(self.image, True, False).convert_alpha()
         self.image_left = self.image.copy().convert_alpha()
         self.rect = self.image.get_rect(
-            x=game.screen.get_width() // 2, y=game.screen.get_height() // 2
+            x=game.screen.get_width() // 2 - 100, y=game.screen.get_height() // 2
         )
         self.velocity = 3
         self.weapon = Weapon(self, game)
@@ -36,24 +36,42 @@ class Player(pygame.sprite.Sprite):
         self.weapon.draw()
 
     def move_y(self, direction):
+        can_move = True
         if direction and self.rect.y > 0:
-            self.rect.y -= self.velocity
+            for rect in self.game.map.down_rects:
+                if rect.colliderect(self.rect):
+                    can_move = False
+            if can_move:
+                self.rect.y -= self.velocity
         elif (
             not direction
             and self.rect.y < self.game.screen.get_height() - self.image.get_height()
         ):
-            self.rect.y += self.velocity
+            for rect in self.game.map.up_rects:
+                if rect.colliderect(self.rect):
+                    can_move = False
+            if can_move:
+                self.rect.y += self.velocity
 
     def move_x(self, direction):
+        can_move = True
         if not direction and self.rect.x > 0:
-            self.rect.x -= self.velocity
-            self.image = self.image_left
+            for rect in self.game.map.right_rects:
+                if rect.colliderect(self.rect):
+                    can_move = False
+            if can_move:
+                self.rect.x -= self.velocity
+                self.image = self.image_left
         elif (
             direction
             and self.rect.x < self.game.screen.get_width() - self.image.get_width()
         ):
-            self.rect.x += self.velocity
-            self.image = self.image_right
+            for rect in self.game.map.left_rects:
+                if rect.colliderect(self.rect):
+                    can_move = False
+            if can_move:
+                self.rect.x += self.velocity
+                self.image = self.image_right
 
     def shoot(self):
         self.all_plasma.add(Plasma(self.weapon))
@@ -69,6 +87,7 @@ class Player(pygame.sprite.Sprite):
     def dead(self):
         self.health = self.max_health
         self.rect = self.image.get_rect(
-            x=self.game.screen.get_width() // 2, y=self.game.screen.get_height() // 2
+            x=self.game.screen.get_width() // 2 - 100, y=self.game.screen.get_height() // 2
         )
         self.all_plasma = pygame.sprite.Group()
+        self.weapon.charge = 0

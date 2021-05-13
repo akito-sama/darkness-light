@@ -1,0 +1,15 @@
+empty : "assets/empty-tile.png"
+flower : "assets/tile-flower.png"
+half : "assets/half-flower.png"
+caisse : "assets/caisse.png"
+
+/*start*/
+
+caisse-F.T.T.F, half, empty, empty, half, empty, empty, empty, empty, empty, empty, caisse-F.F.T.T
+empty, empty, half, empty, empty, empty, half, empty, empty, flower, empty, half
+empty, empty, empty, empty, half, empty, empty, empty, empty, empty, empty, empty
+empty, flower, empty, half, empty, caisse-T.F.F.T, caisse-T.T.F.F, empty, empty, half, empty, half
+empty, empty, empty, empty, empty, caisse-F.F.T.T, caisse-F.T.T.F, empty, empty, empty, empty, empty
+empty, empty, empty, empty, empty, empty, empty, half, empty, empty, empty, empty
+empty, empty, half, empty, empty, empty, empty, empty, half, empty, half, empty
+caisse-T.T.F.F, empty, empty, empty, empty, half, empty, empty, empty, empty, empty, caisse-T.F.F.T
